@@ -65,12 +65,15 @@
             background-color: #1f7;
         }
     </style>
+</head>
+<body>
+    <div id="ledSign"><span id="messageText" class="message"></span></div>
+    <input type="text" id="messageInput" placeholder="Escribe tu mensaje aquí...">
+    <button onclick="updateSign()">Enviar</button>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-
+    <script>
         const firebaseConfig = {
             apiKey: "your-api-key",
             authDomain: "your-project-id.firebaseapp.com",
@@ -80,9 +83,10 @@
             appId: "your-app-id"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const messageRef = doc(db, "messages", "currentMessage");
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const messageRef = db.doc("messages/currentMessage");
 
         async function updateSign() {
             const input = document.getElementById('messageInput');
@@ -97,10 +101,10 @@
             messageText.style.animation = '';
 
             // Update Firestore database
-            await setDoc(messageRef, { text: valueToSend });
+            await messageRef.set({ text: valueToSend });
         }
 
-        onSnapshot(messageRef, (doc) => {
+        messageRef.onSnapshot((doc) => {
             const data = doc.data();
             const messageText = document.getElementById('messageText');
             messageText.textContent = data ? data.text : ''; // Show the message or an empty string if no message
@@ -112,11 +116,6 @@
             }
         });
     </script>
-</head>
-<body>
-    <div id="ledSign"><span id="messageText" class="message"></span></div>
-    <input type="text" id="messageInput" placeholder="Escribe tu mensaje aquí...">
-    <button onclick="updateSign()">Enviar</button>
 </body>
 </html>
 
