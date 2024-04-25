@@ -75,44 +75,37 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
     <script>
         const firebaseConfig = {
-            apiKey: "your-api-key",
-            authDomain: "your-project-id.firebaseapp.com",
-            projectId: "your-project-id",
-            storageBucket: "your-project-id.appspot.com",
-            messagingSenderId: "your-sender-id",
-            appId: "your-app-id"
+            apiKey: "AIzaSyBcEz0YWOaxIm4lfFp-dkyvPdkgXUNrmyQ",
+            authDomain: "proyec-22b56.firebaseapp.com",
+            databaseURL: "https://proyec-22b56-default-rtdb.firebaseio.com",
+            projectId: "proyec-22b56",
+            storageBucket: "proyec-22b56.appspot.com",
+            messagingSenderId: "587873548086",
+            appId: "1:587873548086:web:0ab97db8c18c2558262597"
         };
 
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
         const messageRef = db.doc("messages/currentMessage");
 
-        async function updateSign() {
+        function updateSign() {
             const input = document.getElementById('messageInput');
             const messageText = document.getElementById('messageText');
             const valueToSend = input.value; // Guarda el valor antes de limpiar el campo
-            messageText.textContent = valueToSend; // Update sign text
-            input.value = ''; // Clear input field after sending
+            messageText.textContent = valueToSend; // Actualiza el texto en el letrero
+            input.value = ''; // Limpia el campo de entrada
 
-            // Reset animation to start from the beginning
-            messageText.style.animation = 'none';
-            messageText.offsetHeight; // Trigger reflow
-            messageText.style.animation = '';
-
-            // Update Firestore database
-            await messageRef.set({ text: valueToSend });
+            // Actualiza el documento en Firestore
+            messageRef.set({ text: valueToSend });
         }
 
+        // Escuchar actualizaciones en tiempo real
         messageRef.onSnapshot((doc) => {
-            const data = doc.data();
-            const messageText = document.getElementById('messageText');
-            messageText.textContent = data ? data.text : ''; // Show the message or an empty string if no message
-            // Restart animation if there is a new message
-            if (data) {
-                messageText.style.animation = 'none';
-                messageText.offsetHeight; // Trigger reflow
-                messageText.style.animation = '';
+            if (doc.exists()) {
+                const data = doc.data();
+                document.getElementById('messageText').textContent = data.text;
+            } else {
+                console.log("No such document!");
             }
         });
     </script>
