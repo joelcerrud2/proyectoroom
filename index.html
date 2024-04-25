@@ -64,20 +64,13 @@
         button:hover {
             background-color: #1f7;
         }
-
-        #typingIndicator {
-            color: lime;
-            visibility: hidden;
-        }
     </style>
 </head>
 <body>
     <div id="ledSign"><span id="messageText" class="message"></span></div>
     <input type="text" id="messageInput" placeholder="Escribe tu mensaje aquí...">
     <button onclick="updateSign()">Enviar</button>
-    <div id="typingIndicator">Alguien está escribiendo...</div>
 
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-database.js"></script>
     <script>
@@ -104,30 +97,6 @@
         firebase.database().ref('message').on('value', function(snapshot) {
             const messageText = document.getElementById('messageText');
             messageText.textContent = snapshot.val() || '';
-
-            // Restart animation
-            messageText.style.animation = 'none';
-            setTimeout(() => {
-                messageText.style.animation = 'moveText 3s linear infinite';
-            }, 10); // Delay slight to ensure the animation resets
-        });
-
-        var typingTimer;
-        document.getElementById('messageInput').addEventListener('input', function() {
-            firebase.database().ref('typing').set(true);
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(function() {
-                firebase.database().ref('typing').set(false);
-            }, 500);
-        });
-
-        firebase.database().ref('typing').on('value', function(snapshot) {
-            const typingIndicator = document.getElementById('typingIndicator');
-            if (snapshot.val()) {
-                typingIndicator.style.visibility = 'visible';
-            } else {
-                typingIndicator.style.visibility = 'hidden';
-            }
         });
     </script>
 </body>
