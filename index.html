@@ -84,10 +84,10 @@
         var firebaseConfig = {
             apiKey: "tu-api-key",
             authDomain: "tu-auth-domain",
-            databaseURL: "tu-database-url",
+            databaseURL: "https://proyectoroom-44b1a-default-rtdb.firebaseio.com/",
             projectId: "tu-project-id",
             storageBucket: "tu-storage-bucket",
-            messagingSenderId: "tu-sender-id",
+            messagingSenderId: "tu-messaging-sender-id",
             appId: "tu-app-id"
         };
         // Initialize Firebase
@@ -105,7 +105,7 @@
 
             // Restart animation
             messageText.style.animation = 'none';
-            messageText.offsetHeight;
+            messageText.offsetHeight; // Trigger a reflow
             messageText.style.animation = '';
         });
 
