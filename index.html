@@ -65,55 +65,52 @@
             background-color: #1f7;
         }
     </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
     <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-      import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-      // Your web app's Firebase configuration
-      const firebaseConfig = {
-        apiKey: "your-api-key",
-        authDomain: "your-project-id.firebaseapp.com",
-        databaseURL: "https://your-project-id.firebaseio.com",
-        projectId: "your-project-id",
-        storageBucket: "your-project-id.appspot.com",
-        messagingSenderId: "your-sender-id",
-        appId: "your-app-id"
-      };
+        const firebaseConfig = {
+            apiKey: "your-api-key",
+            authDomain: "your-project-id.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project-id.appspot.com",
+            messagingSenderId: "your-sender-id",
+            appId: "your-app-id"
+        };
 
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const database = getDatabase(app);
-      const messageRef = ref(database, 'message');
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const messageRef = doc(db, "messages", "currentMessage");
 
-      // Function to update the sign and Firebase
-      function updateSign() {
-          const input = document.getElementById('messageInput');
-          const messageText = document.getElementById('messageText');
-          messageText.textContent = input.value; // Update sign text
-          input.value = ''; // Clear input field after sending
+        async function updateSign() {
+            const input = document.getElementById('messageInput');
+            const messageText = document.getElementById('messageText');
+            const valueToSend = input.value; // Guarda el valor antes de limpiar el campo
+            messageText.textContent = valueToSend; // Update sign text
+            input.value = ''; // Clear input field after sending
 
-          // Reset animation to start from the beginning
-          messageText.style.animation = 'none';
-          messageText.offsetHeight; // Trigger reflow
-          messageText.style.animation = '';
+            // Reset animation to start from the beginning
+            messageText.style.animation = 'none';
+            messageText.offsetHeight; // Trigger reflow
+            messageText.style.animation = '';
 
-          // Update Firebase database
-          set(messageRef, input.value);
-      }
+            // Update Firestore database
+            await setDoc(messageRef, { text: valueToSend });
+        }
 
-      // Listen for updates from Firebase
-      onValue(messageRef, (snapshot) => {
-          const message = snapshot.val();
-          document.getElementById('messageText').textContent = message || '';
-          // Restart animation if there is a new message
-          if (message) {
-              const messageText = document.getElementById('messageText');
-              messageText.style.animation = 'none';
-              messageText.offsetHeight; // Trigger reflow
-              messageText.style.animation = '';
-          }
-      });
+        onSnapshot(messageRef, (doc) => {
+            const data = doc.data();
+            const messageText = document.getElementById('messageText');
+            messageText.textContent = data ? data.text : ''; // Show the message or an empty string if no message
+            // Restart animation if there is a new message
+            if (data) {
+                messageText.style.animation = 'none';
+                messageText.offsetHeight; // Trigger reflow
+                messageText.style.animation = '';
+            }
+        });
     </script>
 </head>
 <body>
@@ -122,5 +119,6 @@
     <button onclick="updateSign()">Enviar</button>
 </body>
 </html>
+
 
 
