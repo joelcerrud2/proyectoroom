@@ -7,7 +7,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-image: url('habi.jpeg');
+            background-image: url('habi.jpeg'); /* Ruta relativa correcta si la imagen está en la misma carpeta que el HTML */
             background-size: cover;
             background-position: center;
             color: white;
@@ -20,7 +20,7 @@
         }
 
         #ledSign {
-            width: 250px;
+            width: 250px; /* Ancho del letrero */
             overflow: hidden;
             background-color: #111;
             color: #FF1493;
@@ -31,18 +31,18 @@
             position: relative;
             height: 60px;
             display: flex;
-            align-items: center;
+            align-items: center; /* Centrado vertical */
         }
 
         .message {
             position: absolute;
             white-space: nowrap;
-            animation: moveText 3s linear infinite;
+            animation: moveText 3s linear infinite; /* Duración de la animación reducida a 3 segundos para mayor rapidez */
         }
 
         @keyframes moveText {
-            from { left: 100%; }
-            to { left: -100%; }
+            from { left: 100%; } /* Inicio desde el borde derecho */
+            to { left: -100%; } /* Termina en el borde izquierdo */
         }
 
         input[type="text"], button {
@@ -70,36 +70,20 @@
     <div id="ledSign"><span id="messageText" class="message"></span></div>
     <input type="text" id="messageInput" placeholder="Escribe tu mensaje aquí...">
     <button onclick="updateSign()">Enviar</button>
-
-    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-database.js"></script>
+    
     <script>
-        var firebaseConfig = {
-            apiKey: "tu-api-key",
-            authDomain: "tu-auth-domain",
-            databaseURL: "https://proyectoroom-44b1a-default-rtdb.firebaseio.com/",
-            projectId: "tu-project-id",
-            storageBucket: "tu-storage-bucket",
-            messagingSenderId: "tu-messaging-sender-id",
-            appId: "tu-app-id"
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-
         function updateSign() {
             const input = document.getElementById('messageInput');
-            if (input.value.trim() !== "") {
-                firebase.database().ref('message').set(input.value);
-                input.value = '';
-            }
-        }
-
-        firebase.database().ref('message').on('value', function(snapshot) {
             const messageText = document.getElementById('messageText');
-            messageText.textContent = snapshot.val() || '';
-        });
+            messageText.textContent = input.value; // Actualiza el texto del letrero
+            input.value = ''; // Limpia el campo de texto después de enviar
+
+            // Reiniciar la animación para que comience desde el inicio
+            messageText.style.animation = 'none'; // Detiene la animación
+            messageText.offsetHeight; // Provoca un reflow para resetear la animación
+            messageText.style.animation = ''; // Reinicia la animación
+        }
     </script>
 </body>
 </html>
-
 
