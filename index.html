@@ -7,7 +7,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-image: url('habi.jpeg'); /* Asegúrate de que la ruta de la imagen es correcta */
+            background-image: url('habi.jpeg'); /* Verifica que la ruta de la imagen es correcta */
             background-size: cover;
             background-position: center;
             color: white;
@@ -77,7 +77,6 @@
         const firebaseConfig = {
             apiKey: "AIzaSyBcEz0YWOaxIm4lfFp-dkyvPdkgXUNrmyQ",
             authDomain: "proyec-22b56.firebaseapp.com",
-            databaseURL: "https://proyec-22b56-default-rtdb.firebaseio.com",
             projectId: "proyec-22b56",
             storageBucket: "proyec-22b56.appspot.com",
             messagingSenderId: "587873548086",
@@ -95,18 +94,21 @@
             messageText.textContent = valueToSend; // Actualiza el texto en el letrero
             input.value = ''; // Limpia el campo de entrada
 
-            // Actualiza el documento en Firestore
-            messageRef.set({ text: valueToSend });
+            messageRef.set({ text: valueToSend })
+            .catch(error => {
+                console.error("Error updating the document: ", error);
+            });
         }
 
-        // Escuchar actualizaciones en tiempo real
         messageRef.onSnapshot((doc) => {
             if (doc.exists()) {
                 const data = doc.data();
                 document.getElementById('messageText').textContent = data.text;
             } else {
-                console.log("No such document!");
+                console.log("Document does not exist!");
             }
+        }, error => {
+            console.error("Failed to retrieve document: ", error);
         });
     </script>
 </body>
