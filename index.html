@@ -7,7 +7,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-image: url('habi.jpeg'); /* Ruta relativa correcta si la imagen está en la misma carpeta que el HTML */
+            background-image: url('habi.jpeg'); /* Asegúrate de que la ruta de la imagen es correcta */
             background-size: cover;
             background-position: center;
             color: white;
@@ -20,7 +20,7 @@
         }
 
         #ledSign {
-            width: 250px; /* Ancho del letrero */
+            width: 250px;
             overflow: hidden;
             background-color: #111;
             color: #FF1493;
@@ -31,18 +31,18 @@
             position: relative;
             height: 60px;
             display: flex;
-            align-items: center; /* Centrado vertical */
+            align-items: center;
         }
 
         .message {
             position: absolute;
             white-space: nowrap;
-            animation: moveText 3s linear infinite; /* Duración de la animación reducida a 3 segundos para mayor rapidez */
+            animation: moveText 3s linear infinite;
         }
 
         @keyframes moveText {
-            from { left: 100%; } /* Inicio desde el borde derecho */
-            to { left: -100%; } /* Termina en el borde izquierdo */
+            from { left: 100%; }
+            to { left: -100%; }
         }
 
         input[type="text"], button {
@@ -65,25 +65,62 @@
             background-color: #1f7;
         }
     </style>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+      import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "your-api-key",
+        authDomain: "your-project-id.firebaseapp.com",
+        databaseURL: "https://your-project-id.firebaseio.com",
+        projectId: "your-project-id",
+        storageBucket: "your-project-id.appspot.com",
+        messagingSenderId: "your-sender-id",
+        appId: "your-app-id"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+      const messageRef = ref(database, 'message');
+
+      // Function to update the sign and Firebase
+      function updateSign() {
+          const input = document.getElementById('messageInput');
+          const messageText = document.getElementById('messageText');
+          messageText.textContent = input.value; // Update sign text
+          input.value = ''; // Clear input field after sending
+
+          // Reset animation to start from the beginning
+          messageText.style.animation = 'none';
+          messageText.offsetHeight; // Trigger reflow
+          messageText.style.animation = '';
+
+          // Update Firebase database
+          set(messageRef, input.value);
+      }
+
+      // Listen for updates from Firebase
+      onValue(messageRef, (snapshot) => {
+          const message = snapshot.val();
+          document.getElementById('messageText').textContent = message || '';
+          // Restart animation if there is a new message
+          if (message) {
+              const messageText = document.getElementById('messageText');
+              messageText.style.animation = 'none';
+              messageText.offsetHeight; // Trigger reflow
+              messageText.style.animation = '';
+          }
+      });
+    </script>
 </head>
 <body>
     <div id="ledSign"><span id="messageText" class="message"></span></div>
     <input type="text" id="messageInput" placeholder="Escribe tu mensaje aquí...">
     <button onclick="updateSign()">Enviar</button>
-    
-    <script>
-        function updateSign() {
-            const input = document.getElementById('messageInput');
-            const messageText = document.getElementById('messageText');
-            messageText.textContent = input.value; // Actualiza el texto del letrero
-            input.value = ''; // Limpia el campo de texto después de enviar
-
-            // Reiniciar la animación para que comience desde el inicio
-            messageText.style.animation = 'none'; // Detiene la animación
-            messageText.offsetHeight; // Provoca un reflow para resetear la animación
-            messageText.style.animation = ''; // Reinicia la animación
-        }
-    </script>
 </body>
 </html>
+
 
