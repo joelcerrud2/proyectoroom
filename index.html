@@ -95,8 +95,10 @@
 
         function updateSign() {
             const input = document.getElementById('messageInput');
-            firebase.database().ref('message').set(input.value);
-            input.value = '';
+            if (input.value.trim() !== "") {
+                firebase.database().ref('message').set(input.value);
+                input.value = '';
+            }
         }
 
         firebase.database().ref('message').on('value', function(snapshot) {
@@ -105,8 +107,9 @@
 
             // Restart animation
             messageText.style.animation = 'none';
-            messageText.offsetHeight; // Trigger a reflow
-            messageText.style.animation = '';
+            setTimeout(() => {
+                messageText.style.animation = 'moveText 3s linear infinite';
+            }, 10); // Delay slight to ensure the animation resets
         });
 
         var typingTimer;
