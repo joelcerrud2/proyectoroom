@@ -60,46 +60,48 @@
     <input type="text" id="messageInput" placeholder="Escribe tu mensaje aquí...">
     <button onclick="updateSign()">Enviar</button>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCiAN22mdHDiFJu02527Fe2dHaIozXlBGI",
-            authDomain: "proyectoroom-44b1a.firebaseapp.com",
-            databaseURL: "https://proyectoroom-44b1a-default-rtdb.firebaseio.com",
-            projectId: "proyectoroom-44b1a",
-            storageBucket: "proyectoroom-44b1a.appspot.com",
-            messagingSenderId: "618074503368",
-            appId: "1:618074503368:web:85c2fbaa8e6d57f84e8dfd",
-            measurementId: "G-G1BF248K17"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyCiAN22mdHDiFJu02527Fe2dHaIozXlBGI",
+        authDomain: "proyectoroom-44b1a.firebaseapp.com",
+        databaseURL: "https://proyectoroom-44b1a-default-rtdb.firebaseio.com",
+        projectId: "proyectoroom-44b1a",
+        storageBucket: "proyectoroom-44b1a.appspot.com",
+        messagingSenderId: "618074503368",
+        appId: "1:618074503368:web:85c2fbaa8e6d57f84e8dfd",
+        measurementId: "G-G1BF248K17"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-        async function updateSign() {
-            const input = document.getElementById('messageInput');
-            const messageText = document.getElementById('messageText');
-            const valueToSend = input.value;
-            if (!valueToSend.trim()) {
-                alert("Por favor, escribe un mensaje antes de enviar.");
-                return;
-            }
-            messageText.textContent = valueToSend; // Asegura que la palabra aparezca en la pantalla LED
-            input.value = ''; // Limpia el input después de enviar
+    async function updateSign() {
+        const input = document.getElementById('messageInput');
+        const messageText = document.getElementById('messageText');
+        const valueToSend = input.value.trim(); // Trim whitespace
 
-            try {
-                await addDoc(collection(db, "messages"), {
-                    text: valueToSend,
-                    timestamp: new Date() // Opcional: guarda un timestamp
-                });
-                console.log("Mensaje enviado y guardado en Firestore");
-            } catch (error) {
-                console.error("Error al guardar el mensaje en Firestore: ", error);
-            }
+        if (valueToSend === "") {
+            alert("Por favor, escribe un mensaje antes de enviar.");
+            return;
         }
-    </script>
+
+        messageText.textContent = valueToSend; // Update the LED sign immediately
+        input.value = ''; // Clear the input after sending
+
+        try {
+            await addDoc(collection(db, "messages"), {
+                text: valueToSend,
+                timestamp: new Date() // Optionally save a timestamp
+            });
+            console.log("Mensaje enviado y guardado en Firestore");
+        } catch (error) {
+            console.error("Error al guardar el mensaje en Firestore: ", error);
+        }
+    }
+</script>
 </body>
 </html>
 
