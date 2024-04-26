@@ -79,26 +79,26 @@
         const db = getFirestore(app);
 
         async function updateSign() {
+            console.log("Attempting to send message...");
             const input = document.getElementById('messageInput');
             const messageText = document.getElementById('messageText');
             const valueToSend = input.value;
-            messageText.textContent = valueToSend; // Visualmente actualiza el letrero
-            input.value = ''; // Limpia el input después de enviar
+            messageText.textContent = valueToSend; // Visual update on the LED sign
+            input.value = ''; // Clear the input after sending
 
             try {
-                await addDoc(collection(db, "messages"), {
+                const docRef = await addDoc(collection(db, "messages"), {
                     text: valueToSend,
-                    timestamp: new Date() // Opcional: guarda un timestamp
+                    timestamp: new Date() // Optional: Save a timestamp
                 });
-                console.log("Mensaje enviado y guardado en Firestore");
+                console.log("Document written with ID: ", docRef.id);
             } catch (error) {
-                console.error("Error al guardar el mensaje en Firestore: ", error);
+                console.error("Error adding document: ", error);
             }
         }
     </script>
 </body>
 </html>
-
 
 
 
