@@ -61,49 +61,48 @@
     <button onclick="updateSign()">Enviar</button>
 
     <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCiAN22mdHDiFJu02527Fe2dHaIozXlBGI",
-        authDomain: "proyectoroom-44b1a.firebaseapp.com",
-        databaseURL: "https://proyectoroom-44b1a-default-rtdb.firebaseio.com",
-        projectId: "proyectoroom-44b1a",
-        storageBucket: "proyectoroom-44b1a.appspot.com",
-        messagingSenderId: "618074503368",
-        appId: "1:618074503368:web:85c2fbaa8e6d57f84e8dfd",
-        measurementId: "G-G1BF248K17"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyCiAN22mdHDiFJu02527Fe2dHaIozXlBGI",
+            authDomain: "proyectoroom-44b1a.firebaseapp.com",
+            databaseURL: "https://proyectoroom-44b1a-default-rtdb.firebaseio.com",
+            projectId: "proyectoroom-44b1a",
+            storageBucket: "proyectoroom-44b1a.appspot.com",
+            messagingSenderId: "618074503368",
+            appId: "1:618074503368:web:85c2fbaa8e6d57f84e8dfd",
+            measurementId: "G-G1BF248K17"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    async function updateSign() {
-        console.log("Función llamada"); // Confirma que la función se llama
-        const input = document.getElementById('messageInput');
-        const messageText = document.getElementById('messageText');
-        const valueToSend = input.value.trim(); // Asegura que el valor no sea solo espacios
-
-        if (valueToSend) {
-            messageText.textContent = valueToSend; // Actualiza visualmente el letrero
+        async function updateSign() {
+            const input = document.getElementById('messageInput');
+            const messageText = document.getElementById('messageText');
+            const valueToSend = input.value;
+            if (!valueToSend.trim()) {
+                alert("Por favor, escribe un mensaje antes de enviar.");
+                return;
+            }
+            messageText.textContent = valueToSend; // Asegura que la palabra aparezca en la pantalla LED
             input.value = ''; // Limpia el input después de enviar
 
             try {
-                const docRef = await addDoc(collection(db, "messages"), {
+                await addDoc(collection(db, "messages"), {
                     text: valueToSend,
-                    timestamp: new Date()
+                    timestamp: new Date() // Opcional: guarda un timestamp
                 });
-                console.log("Documento escrito con ID: ", docRef.id);
+                console.log("Mensaje enviado y guardado en Firestore");
             } catch (error) {
                 console.error("Error al guardar el mensaje en Firestore: ", error);
             }
-        } else {
-            console.log("No hay mensaje para enviar");
         }
-    }
-</script>
+    </script>
 </body>
 </html>
+
 
 
 
