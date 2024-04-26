@@ -62,7 +62,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBcEz0YWOaxIm4lfFp-dkyvPdkgXUNrmyQ",
@@ -76,33 +76,26 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const messageRef = doc(db, "messages", "L7fKXRMJLczY3mz2n8Gb");
-
         async function updateSign() {
             const input = document.getElementById('messageInput');
             const messageText = document.getElementById('messageText');
             const valueToSend = input.value;
-            messageText.textContent = valueToSend; // Visually update sign
-            input.value = ''; // Clear input after sending
+            messageText.textContent = valueToSend; // Visualmente actualiza el letrero
+            input.value = ''; // Limpia el input después de enviar
 
             try {
-                await setDoc(messageRef, { text: valueToSend });
-                console.log("Documento actualizado con éxito");
+                await addDoc(collection(db, "messages"), {
+                    text: valueToSend,
+                    timestamp: new Date() // Opcional: guarda un timestamp
+                });
+                console.log("Mensaje enviado y guardado en Firestore");
             } catch (error) {
-                console.error("Error al actualizar el documento: ", error);
+                console.error("Error al guardar el mensaje en Firestore: ", error);
             }
         }
-
-        onSnapshot(messageRef, (doc) => {
-            if (doc.exists()) {
-                const data = doc.data();
-                document.getElementById('messageText').textContent = data.text; // Ensure real-time updates work
-            } else {
-                console.log("Document does not exist!");
-            }
-        });
     </script>
 </body>
 </html>
+
 
 
