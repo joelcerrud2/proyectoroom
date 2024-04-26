@@ -7,7 +7,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-image: url('habi.jpeg'); /* Verifica la ruta de la imagen */
+            background-image: url('habi.jpeg');
             background-size: cover;
             background-position: center;
             color: white;
@@ -37,15 +37,10 @@
             white-space: nowrap;
             animation: moveText 3s linear infinite;
         }
-        @keyframes moveText {
-            from { left: 100%; }
-            to { left: -100%; }
-        }
         input[type="text"], button {
             padding: 10px;
             margin-top: 20px;
             border-radius: 5px;
-            border: none;
             background-color: #333;
             color: white;
             width: 250px;
@@ -54,6 +49,7 @@
             background-color: lime;
             color: black;
             cursor: pointer;
+            border: none;
         }
         button:hover {
             background-color: #1f7;
