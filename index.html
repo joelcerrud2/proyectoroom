@@ -7,7 +7,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-image: url('habi.jpeg'); /* Verifica que la ruta de la imagen es correcta */
+            background-image: url('habi.jpeg'); /* Asegúrate de que la imagen está correctamente ubicada y accesible */
             background-size: cover;
             background-position: center;
             color: white;
@@ -45,7 +45,7 @@
             padding: 10px;
             margin-top: 20px;
             border-radius: 5px;
-            border: 1px solid #555;
+            border: none;
             background-color: #333;
             color: white;
             width: 250px;
@@ -66,47 +66,43 @@
     <button onclick="updateSign()">Enviar</button>
 
     <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-      import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-      // Your web app's Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyBcEz0YWOaxIm4lfFp-dkyvPdkgXUNrmyQ",
-        authDomain: "proyec-22b56.firebaseapp.com",
-        projectId: "proyec-22b56",
-        storageBucket: "proyec-22b56.appspot.com",
-        messagingSenderId: "587873548086",
-        appId: "1:587873548086:web:8c5556834a3466e1262597"
-      };
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcEz0YWOaxIm4lfFp-dkyvPdkgXUNrmyQ",
+            authDomain: "proyec-22b56.firebaseapp.com",
+            projectId: "proyec-22b56",
+            storageBucket: "proyec-22b56.appspot.com",
+            messagingSenderId: "587873548086",
+            appId: "1:587873548086:web:8c5556834a3466e1262597"
+        };
 
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-      const messageRef = doc(db, "messages/aSQ2FBe7gFANIFJNjZHH");
+        const messageRef = doc(db, "messages", "L7fKXRMJLczY3mz2n8Gb");
 
-      async function updateSign() {
-          const input = document.getElementById('messageInput');
-          const messageText = document.getElementById('messageText');
-          const valueToSend = input.value;
-          messageText.textContent = valueToSend;
-          input.value = '';
+        async function updateSign() {
+            const input = document.getElementById('messageInput');
+            const messageText = document.getElementById('messageText');
+            const valueToSend = input.value;
+            messageText.textContent = valueToSend;
+            input.value = '';
 
-          await setDoc(messageRef, { text: valueToSend });
-      }
+            await setDoc(messageRef, { text: valueToSend });
+        }
 
-      onSnapshot(messageRef, (doc) => {
-          if (doc.exists()) {
-              const data = doc.data();
-              document.getElementById('messageText').textContent = data.text;
-          } else {
-              console.log("Document does not exist!");
-          }
-      });
+        onSnapshot(messageRef, (doc) => {
+            if (doc.exists()) {
+                const data = doc.data();
+                document.getElementById('messageText').textContent = data.text;
+            } else {
+                console.log("Document does not exist!");
+            }
+        });
     </script>
 </body>
 </html>
-
 
 
