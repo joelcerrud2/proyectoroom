@@ -18,7 +18,6 @@
             justify-content: center;
             height: 100vh;
         }
-
         #ledSign {
             width: 250px;
             overflow: hidden;
@@ -33,18 +32,15 @@
             display: flex;
             align-items: center;
         }
-
         .message {
             position: absolute;
             white-space: nowrap;
             animation: moveText 3s linear infinite;
         }
-
         @keyframes moveText {
             from { left: 100%; }
             to { left: -100%; }
         }
-
         input[type="text"], button {
             padding: 10px;
             margin-top: 20px;
@@ -54,13 +50,11 @@
             color: white;
             width: 250px;
         }
-
         button {
             background-color: lime;
             color: black;
             cursor: pointer;
         }
-
         button:hover {
             background-color: #1f7;
         }
@@ -71,45 +65,45 @@
     <input type="text" id="messageInput" placeholder="Escribe tu mensaje aquí...">
     <button onclick="updateSign()">Enviar</button>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBcEz0YWOaxIm4lfFp-dkyvPdkgXUNrmyQ",
-            authDomain: "proyec-22b56.firebaseapp.com",
-            projectId: "proyec-22b56",
-            storageBucket: "proyec-22b56.appspot.com",
-            messagingSenderId: "587873548086",
-            appId: "1:587873548086:web:0ab97db8c18c2558262597"
-        };
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+      import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const messageRef = db.doc("messages/aSQ2FBe7gFANIFJNjZHH");
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBcEz0YWOaxIm4lfFp-dkyvPdkgXUNrmyQ",
+        authDomain: "proyec-22b56.firebaseapp.com",
+        projectId: "proyec-22b56",
+        storageBucket: "proyec-22b56.appspot.com",
+        messagingSenderId: "587873548086",
+        appId: "1:587873548086:web:8c5556834a3466e1262597"
+      };
 
-        function updateSign() {
-            const input = document.getElementById('messageInput');
-            const messageText = document.getElementById('messageText');
-            const valueToSend = input.value; // Guarda el valor antes de limpiar el campo
-            messageText.textContent = valueToSend; // Actualiza el texto en el letrero
-            input.value = ''; // Limpia el campo de entrada
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
 
-            messageRef.set({ text: valueToSend })
-            .catch(error => {
-                console.error("Error updating the document: ", error);
-            });
-        }
+      const messageRef = doc(db, "messages/aSQ2FBe7gFANIFJNjZHH");
 
-        messageRef.onSnapshot((doc) => {
-            if (doc.exists()) {
-                const data = doc.data();
-                document.getElementById('messageText').textContent = data.text;
-            } else {
-                console.log("Document does not exist!");
-            }
-        }, error => {
-            console.error("Failed to retrieve document: ", error);
-        });
+      async function updateSign() {
+          const input = document.getElementById('messageInput');
+          const messageText = document.getElementById('messageText');
+          const valueToSend = input.value;
+          messageText.textContent = valueToSend;
+          input.value = '';
+
+          await setDoc(messageRef, { text: valueToSend });
+      }
+
+      onSnapshot(messageRef, (doc) => {
+          if (doc.exists()) {
+              const data = doc.data();
+              document.getElementById('messageText').textContent = data.text;
+          } else {
+              console.log("Document does not exist!");
+          }
+      });
     </script>
 </body>
 </html>
