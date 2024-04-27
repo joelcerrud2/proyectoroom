@@ -7,7 +7,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-image: url('habi.jpeg');
+            background-image: url('habi.jpeg'); /* Asegúrate de que la ruta sea correcta */
             background-size: cover;
             background-position: center;
             color: white;
@@ -20,7 +20,7 @@
         }
 
         #ledSign {
-            width: 250px;
+            width: 250px; /* Ancho del letrero */
             overflow: hidden;
             background-color: #111;
             color: #FF1493;
@@ -31,18 +31,18 @@
             position: relative;
             height: 60px;
             display: flex;
-            align-items: center;
+            align-items: center; /* Centrado vertical */
         }
 
         .message {
             position: absolute;
             white-space: nowrap;
-            animation: moveText 3s linear infinite;
+            animation: moveText 3s linear infinite; /* Duración de la animación reducida a 3 segundos para mayor rapidez */
         }
 
         @keyframes moveText {
-            from { left: 100%; }
-            to { left: -100%; }
+            from { left: 100%; } /* Inicio desde el borde derecho */
+            to { left: -100%; } /* Termina en el borde izquierdo */
         }
 
         input[type="text"], button {
@@ -70,52 +70,22 @@
     <div id="ledSign"><span id="messageText" class="message"></span></div>
     <input type="text" id="messageInput" placeholder="Escribe tu mensaje aquí...">
     <button onclick="updateSign()">Enviar</button>
-    <button onclick="toggleRandomColors()">Toggle Random Colors</button>
     
     <script>
-        let randomColorsActive = false;
-
         function updateSign() {
             const input = document.getElementById('messageInput');
             const messageText = document.getElementById('messageText');
-            if (randomColorsActive) {
-                applyRandomColors(input.value, messageText);
-            } else {
-                messageText.textContent = input.value;
-            }
-            input.value = '';
+            messageText.textContent = input.value; // Actualiza el texto del letrero
+            input.value = ''; // Limpia el campo de texto después de enviar
 
-            messageText.style.animation = 'none';
-            messageText.offsetHeight;
-            messageText.style.animation = '';
-        }
-
-        function toggleRandomColors() {
-            randomColorsActive = !randomColorsActive;
-        }
-
-        function applyRandomColors(text, element) {
-            element.innerHTML = '';
-            for (let char of text) {
-                const span = document.createElement('span');
-                span.textContent = char;
-                span.style.color = getRandomColor();
-                element.appendChild(span);
-            }
-        }
-
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
+            // Reiniciar la animación para que comience desde el inicio
+            messageText.style.animation = 'none'; // Detiene la animación
+            messageText.offsetHeight; // Provoca un reflow para resetear la animación
+            messageText.style.animation = ''; // Reinicia la animación
         }
     </script>
 </body>
 </html>
-
 
 
 
