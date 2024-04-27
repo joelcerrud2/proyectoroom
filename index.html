@@ -7,7 +7,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-image: url('habi.jpeg'); /* Asegúrate de que la ruta de la imagen es correcta */
+            background-image: url('habi.jpeg'); /* Asegúrate de que la ruta sea correcta */
             background-size: cover;
             background-position: center;
             color: white;
@@ -18,38 +18,51 @@
             justify-content: center;
             height: 100vh;
         }
+
         #ledSign {
-            width: 250px;
+            width: 300px; /* Ancho del letrero */
             overflow: hidden;
-            background-color: #111;
+            background: radial-gradient(circle, rgba(17,17,17,1) 0%, rgba(28,28,28,1) 100%); /* Gradiente para simular profundidad */
+            border: 1px solid #FF1493; /* Borde del letrero */
+            border-radius: 8px; /* Bordes redondeados */
+            box-shadow: 0 0 20px #FF1493, inset 0 0 10px #300; /* Sombra externa e interna para efecto de profundidad */
             color: #FF1493;
-            font-size: 30px;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 15px #FF1493;
+            font-size: 24px;
+            padding: 15px 20px;
             position: relative;
             height: 60px;
             display: flex;
             align-items: center;
         }
+
         .message {
             position: absolute;
             white-space: nowrap;
-            animation: moveText 3s linear infinite;
+            animation: moveText 5s linear infinite;
+            text-shadow: 0 0 7px #FF1493, 0 0 10px #FF1493; /* Brillo del texto */
         }
+
+        @keyframes moveText {
+            from { left: 100%; }
+            to { left: -100%; }
+        }
+
         input[type="text"], button {
             padding: 10px;
             margin-top: 20px;
             border-radius: 5px;
+            border: 1px solid #555;
             background-color: #333;
             color: white;
-            width: 250px;
+            width: 300px;
         }
+
         button {
             background-color: lime;
             color: black;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #1f7;
         }
@@ -59,21 +72,18 @@
     <div id="ledSign"><span id="messageText" class="message"></span></div>
     <input type="text" id="messageInput" placeholder="Escribe tu mensaje aquí...">
     <button onclick="updateSign()">Enviar</button>
-
+    
     <script>
         function updateSign() {
-            var input = document.getElementById('messageInput');
-            var messageText = document.getElementById('messageText');
-            var valueToSend = input.value;
+            const input = document.getElementById('messageInput');
+            const messageText = document.getElementById('messageText');
+            messageText.textContent = input.value; // Actualiza el texto del letrero
+            input.value = ''; // Limpia el campo de texto después de enviar
 
-            if (valueToSend.trim() === "") {
-                alert("Por favor, escribe un mensaje antes de enviar.");
-                return;
-            }
-
-            messageText.textContent = valueToSend; // Update the LED sign immediately
-            input.value = ''; // Clear the input after sending
-            console.log("Mensaje enviado a la pantalla LED:", valueToSend);
+            // Reiniciar la animación para que comience desde el inicio
+            messageText.style.animation = 'none'; // Detiene la animación
+            messageText.offsetHeight; // Provoca un reflow para resetear la animación
+            messageText.style.animation = ''; // Reinicia la animación
         }
     </script>
 </body>
